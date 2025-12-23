@@ -5,5 +5,4 @@
 "languages":
   - changed-files:
       - any-glob-to-any-file:
-          - "src/languages/*"
-          - "src/languages/**/*"
+          - "src/locales/*.ts"

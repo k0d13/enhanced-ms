@@ -1,14 +1,10 @@
 import { createMs } from './factory';
-export const ms = createMs({ language: 'en' });
+import en from './locales/en';
+export const ms = createMs({ language: en });
 export default ms;
 
+export { createMs, type Ms } from './factory';
 export { formatMilliseconds } from './format';
-export {
-  parseMilliseconds,
-  parseUnits,
-} from './format/helpers/parse-milliseconds';
-export { getLanguage } from './languages/helpers/make-language';
-export { languages } from './languages';
+export { compileLanguage } from './language/compile';
 export { parseDuration } from './parse';
-export { type Ms, createMs } from './factory';
-export { Time, units } from './time';
+export { Time } from './time';

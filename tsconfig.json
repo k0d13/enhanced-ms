@@ -1,7 +1,7 @@
 {
   "$schema": "https://json.schemastore.org/tsconfig.json",
 
-  "include": ["src/**/*", "tests/**/*"],
+  "include": ["**/*"],
   "exclude": ["node_modules", "dist"],
 
   "compileOnSave": true,

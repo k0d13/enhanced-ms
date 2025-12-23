@@ -2,11 +2,11 @@ import { formatMilliseconds } from './format';
 import {
   type FormatOptions,
   type FormatOptionsPreset,
-  resolveFormatPresetOptions,
-} from './format/helpers/resolve-options';
-import type { languages } from './languages';
-import type { LanguageDefinition } from './languages/helpers/definition-types';
-import { getLanguage } from './languages/helpers/make-language';
+  formatOptionsPresets,
+  resolveFormatOptions,
+} from './format/resolve-options';
+import { compileLanguage } from './language/compile';
+import type { LanguageDefinition } from './language/definition';
 import { parseDuration } from './parse';
 
 /**
@@ -49,7 +49,7 @@ export interface Ms {
    * ms(90061, 'short') // "1m 30s"
    * ms(90061, 'colonNotation') // "00:01:30"
    */
-  (milliseconds: number, preset: FormatOptionsPreset): string | null;
+  (milliseconds: number, options: FormatOptionsPreset): string | null;
 
   /**
    * Parse a human-readable duration string into milliseconds.
@@ -67,10 +67,8 @@ export interface Ms {
 export interface CreateMsOptions {
   /**
    * The language to use for formatting and parsing.
-   *
-   * @default 'en'
    */
-  language?: keyof typeof languages | LanguageDefinition;
+  language: LanguageDefinition;
 
   /**
    * Default formatting options to use.
@@ -80,41 +78,41 @@ export interface CreateMsOptions {
 
 /**
  * Creates a new function that formats and parses durations using the specified options as defaults.
+ *
  * @param options The options to use for formatting and parsing
  * @returns A new function that formats and parses durations
  *
  * @example
- * const ms = createMs({ language: 'en' });
- * const ms = createMs({ language: 'ru' });
- * const ms = createMs({ language: 'de' });
+ * import en from 'enhanced-ms/locales/en';
+ * const ms = createMs({ language: en });
+ * import ru from 'enhanced-ms/locales/ru';
+ * const ms = createMs({ language: ru });
+ * import de from 'enhanced-ms/locales/de';
+ * const ms = createMs({ language: de });
  */
-export function createMs(options: CreateMsOptions = {}): Ms {
-  const language = getLanguage(options.language ?? 'en');
-  const defaultFormatOptions = //
-    resolveFormatPresetOptions(options.formatOptions);
+export function createMs(options: CreateMsOptions) {
+  const language = compileLanguage(options.language);
+  const defaultFormatOptions = resolveFormatOptions(options.formatOptions);
 
   function ms(
-    ...args: [number, FormatOptions?] | [number, FormatOptionsPreset] | [string]
+    ...args: [number, (FormatOptions | FormatOptionsPreset)?] | [string]
   ) {
-    switch (typeof args[0]!) {
+    switch (typeof args[0]) {
       case 'number': {
-        const [milliseconds, additionalOptions] = args;
-        if (Number.isNaN(milliseconds) || !Number.isFinite(milliseconds))
-          throw new TypeError('Expected a finite number');
-        if (milliseconds < 0) throw new TypeError('Expected a positive number');
-
-        const presetOptions = resolveFormatPresetOptions(additionalOptions);
-        const formatOptions = { ...defaultFormatOptions, ...presetOptions };
-        return formatMilliseconds(milliseconds, language, formatOptions);
+        let [milliseconds, options] = args;
+        if (typeof options === 'string')
+          options = formatOptionsPresets[options];
+        const mergedOptions = { ...defaultFormatOptions, ...options };
+        return formatMilliseconds(language, milliseconds, mergedOptions);
       }
 
       case 'string': {
         const [duration] = args;
-        return parseDuration(duration, language) ?? 0;
+        return parseDuration(language, duration) ?? 0;
       }
 
       default:
-        throw new TypeError('Expected a finite number or a string');
+        throw new Error('Invalid arguments');
     }
   }
 
