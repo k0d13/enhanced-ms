@@ -50,16 +50,19 @@ As mentioned above, `enhanced-ms` is an enhanced version of the popular [`ms`](h
 
 The currently supported languages include:
 
-| Language          | Key |
-| ----------------- | --- |
-| English (default) | en  |
-| German            | de  |
-| Russian           | ru  |
-| Māori             | mi  |
-| Spanish           | es  |
-| Dutch             | nl  |
-| Italian           | it  |
-| French            | fr  |
+| Language              | Key   |
+| --------------------- | ----- |
+| English (default)     | en    |
+| German                | de    |
+| Russian               | ru    |
+| Māori                 | mi    |
+| Spanish               | es    |
+| Dutch                 | nl    |
+| Italian               | it    |
+| French                | fr    |
+| Czech                 | cs    |
+| Polish                | pl    |
+| Chinese (Simplified)  | zh-CN |
 
 You can help by adding support for more languages.
 
