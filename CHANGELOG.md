@@ -1,5 +1,11 @@
 # enhanced-ms
 
+## 4.2.0
+
+### Minor Changes
+
+- d59d860: Add support for Polish, Czech, and Chinese (Simplified)
+
 ## 4.1.0
 
 ### Minor Changes
