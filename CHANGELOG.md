@@ -1,5 +1,11 @@
 # enhanced-ms
 
+## 4.3.0
+
+### Minor Changes
+
+- fecdea7: Add support for Portuguese
+
 ## 4.2.0
 
 ### Minor Changes
