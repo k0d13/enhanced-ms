@@ -114,15 +114,25 @@ export type FormatOptionsPreset = keyof typeof formatOptionsPresets;
 
 // ===== Resolve ===== //
 
+export type ResolvedFormatOptions = {
+  hideUnitNames: boolean;
+  useAbbreviations: boolean;
+  includeZero: boolean;
+  includedUnits: Lowercase<Time.Key>[];
+  unitLimit: number;
+  unitSeparator: string;
+  minimumDigits: number;
+  __transformDuration__: ((duration: string) => string) | undefined;
+};
+
 export function resolveFormatOptions(
   options?: FormatOptions | FormatOptionsPreset,
-) {
-  if (!options) {
-    return resolveFormatOptions(defaultFormatOptions);
-  } else if (typeof options === 'string') {
-    const preset = formatOptionsPresets[options];
-    return resolveFormatOptions(preset);
-  }
+): ResolvedFormatOptions {
+  // Fast-path: no options → return the cached resolved defaults
+  if (!options) return resolvedDefaultFormatOptions;
+
+  // Fast-path: string preset → return the cached resolved preset
+  if (typeof options === 'string') return resolvedPresets[options];
 
   let {
     hideUnitNames = defaultFormatOptions.hideUnitNames,
@@ -155,4 +165,55 @@ export function resolveFormatOptions(
   };
 }
 
-export type ResolvedFormatOptions = ReturnType<typeof resolveFormatOptions>;
+// ==== //
+
+// Pre-resolve the defaults and each preset once at module load — avoids
+// object allocation on every call for the common no-options / preset path.
+export const resolvedDefaultFormatOptions: ResolvedFormatOptions = {
+  hideUnitNames: defaultFormatOptions.hideUnitNames,
+  useAbbreviations: defaultFormatOptions.useAbbreviations,
+  includeZero: defaultFormatOptions.includeZero,
+  includedUnits: defaultFormatOptions.includedUnits,
+  unitLimit: defaultFormatOptions.unitLimit,
+  unitSeparator: defaultFormatOptions.unitSeparator,
+  minimumDigits: defaultFormatOptions.minimumDigits,
+  __transformDuration__: undefined,
+};
+
+// Build the resolved-preset cache by running each preset through the resolver
+// using a temporary type assertion (presets are plain objects, not strings).
+const resolvedPresets = Object.fromEntries(
+  Object.entries(formatOptionsPresets).map(([key, preset]) => [
+    key,
+    (() => {
+      const p = preset as FormatOptions;
+      let {
+        hideUnitNames = defaultFormatOptions.hideUnitNames,
+        useAbbreviations = defaultFormatOptions.useAbbreviations,
+        includeZero = defaultFormatOptions.includeZero,
+        includeMs = defaultFormatOptions.includeMs,
+        includeSubMs = defaultFormatOptions.includeSubMs,
+        includedUnits = defaultFormatOptions.includedUnits,
+        unitLimit = defaultFormatOptions.unitLimit,
+        unitSeparator = defaultFormatOptions.unitSeparator,
+        minimumDigits = defaultFormatOptions.minimumDigits,
+        __transformDuration__,
+      } = p;
+      if (includeMs || includeSubMs) {
+        includedUnits = [...includedUnits];
+        if (includeMs) includedUnits.push('millisecond');
+        if (includeSubMs) includedUnits.push('nanosecond', 'microsecond');
+      }
+      return {
+        hideUnitNames,
+        useAbbreviations,
+        includeZero,
+        includedUnits,
+        unitLimit,
+        unitSeparator,
+        minimumDigits,
+        __transformDuration__,
+      } satisfies ResolvedFormatOptions;
+    })(),
+  ]),
+) as Record<FormatOptionsPreset, ResolvedFormatOptions>;

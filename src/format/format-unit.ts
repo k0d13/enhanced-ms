@@ -22,10 +22,19 @@ export function formatUnit(
   >,
 ) {
   const { useAbbreviations, hideUnitNames, minimumDigits } = options;
-  const amount = count.toString().padStart(minimumDigits, '0');
+
+  // Skip padStart entirely when minimumDigits is 0 (the default) — avoids a
+  // string method call on every formatted unit.
+  const countStr = String(count);
+  const amount =
+    minimumDigits > countStr.length
+      ? countStr.padStart(minimumDigits, '0')
+      : countStr;
+
   if (hideUnitNames) return amount;
   const name = pluraliseUnit(unit, count, options);
-  return `${amount}${useAbbreviations ? '' : ' '}${name}`;
+  // Avoid a ternary + extra concat for the common abbreviation-less path
+  return useAbbreviations ? `${amount}${name}` : `${amount} ${name}`;
 }
 
 /**
@@ -48,5 +57,7 @@ export function pluraliseUnit(
   const { useAbbreviations } = options;
   const factory =
     useAbbreviations && unit.abbreviation ? unit.abbreviation : unit.name;
-  return typeof factory === 'function' ? factory(Math.abs(count)) : factory;
+  return typeof factory === 'function'
+    ? factory(count < 0 ? -count : count)
+    : factory;
 }

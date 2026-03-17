@@ -1,11 +1,11 @@
-import type { CompiledLanguage } from "~/language/compile";
-import { formatUnit } from "./format-unit";
-import { parseMilliseconds } from "./parse-milliseconds";
+import type { CompiledLanguage } from '~/language/compile';
+import { formatUnit } from './format-unit';
 import {
   type FormatOptions,
   type FormatOptionsPreset,
+  type ResolvedFormatOptions,
   resolveFormatOptions,
-} from "./resolve-options";
+} from './resolve-options';
 
 /**
  * Formats a duration given in milliseconds into a human-readable string.
@@ -24,45 +24,54 @@ export function formatMilliseconds(
   milliseconds: number,
   options?: FormatOptions | FormatOptionsPreset,
 ) {
-  const resolvedOptions = resolveFormatOptions(options);
+  return _formatMilliseconds(
+    language,
+    milliseconds,
+    resolveFormatOptions(options),
+  );
+}
 
-  // ==== Parsing ==== //
+/**
+ * Internal variant that accepts a pre-resolved options object directly,
+ * skipping the options-resolution step.  Used by `createMs` to avoid
+ * resolving the same default options on every call.
+ */
+export function _formatMilliseconds(
+  language: CompiledLanguage,
+  milliseconds: number,
+  resolvedOptions: ResolvedFormatOptions,
+) {
+  const {
+    includedUnits,
+    includeZero,
+    unitLimit,
+    unitSeparator,
+    __transformDuration__,
+  } = resolvedOptions;
 
-  const { includedUnits } = resolvedOptions;
-  const time = parseMilliseconds(milliseconds, includedUnits);
-  const entries = [];
-  for (const unit in time)
-    entries.push({
-      unit: language.timeUnits[unit]!,
-      amount: time[unit as keyof typeof time],
-    });
+  // Single pass: decompose milliseconds, filter zeros, and format — all at
+  // once.  This replaces the original four separate passes (parseMilliseconds
+  // → entries[] → filtered[] → formatted[]) with a single loop and one array.
+  let remaining = Math.abs(milliseconds);
+  const parts: string[] = [];
 
-  // ===== Filtering ===== //
+  for (let i = 0; i < includedUnits.length; i++) {
+    // Honour unitLimit early to skip unnecessary iterations
+    if (unitLimit !== -1 && parts.length >= unitLimit) break;
 
-  const { includeZero } = resolvedOptions;
-  const filtered = [];
-  for (let i = 0; i < entries.length; i++) {
-    const entry = entries[i]!;
-    if (entry.amount === null) continue;
-    if (entry.amount === 0 && !includeZero) continue;
-    filtered.push(entry);
+    const unitKey = includedUnits[i]!;
+    const langUnit = language.timeUnits[unitKey];
+    if (!langUnit) continue;
+
+    const amount = Math.trunc(remaining / langUnit.ms);
+    remaining %= langUnit.ms;
+
+    if (amount === 0 && !includeZero) continue;
+
+    parts.push(formatUnit(langUnit, amount, resolvedOptions));
   }
 
-  // ===== Formatting ===== //
-
-  const { unitLimit } = resolvedOptions;
-  const formatted = [];
-  for (let i = 0; i < filtered.length; i++) {
-    const entry = filtered[i]!;
-    if (unitLimit !== -1 && i >= unitLimit) break;
-    const format = formatUnit(entry.unit, entry.amount!, resolvedOptions);
-    formatted.push(format);
-  }
-
-  // ===== Joining ===== //
-
-  const { unitSeparator, __transformDuration__ } = resolvedOptions;
-  const duration = formatted.join(unitSeparator) || null;
+  const duration = parts.length > 0 ? parts.join(unitSeparator) : null;
   return duration && __transformDuration__
     ? __transformDuration__(duration)
     : duration;

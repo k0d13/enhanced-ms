@@ -1,8 +1,8 @@
-import { formatMilliseconds } from './format';
+import { _formatMilliseconds } from './format';
 import {
   type FormatOptions,
   type FormatOptionsPreset,
-  formatOptionsPresets,
+  type ResolvedFormatOptions,
   resolveFormatOptions,
 } from './format/resolve-options';
 import { compileLanguage } from './language/compile';
@@ -92,18 +92,42 @@ export interface CreateMsOptions {
  */
 export function createMs(options: CreateMsOptions) {
   const language = compileLanguage(options.language);
-  const defaultFormatOptions = resolveFormatOptions(options.formatOptions);
+  // Resolve once at construction time; the result is reused for every call
+  // that does not supply per-call options.
+  const defaultResolvedOptions = resolveFormatOptions(options.formatOptions);
 
   function ms(
     ...args: [number, (FormatOptions | FormatOptionsPreset)?] | [string]
   ) {
     switch (typeof args[0]) {
       case 'number': {
-        let [milliseconds, options] = args;
-        if (typeof options === 'string')
-          options = formatOptionsPresets[options];
-        const mergedOptions = { ...defaultFormatOptions, ...options };
-        return formatMilliseconds(language, milliseconds, mergedOptions);
+        const [milliseconds, callOptions] = args;
+
+        // Fast-path: no per-call options — reuse the pre-resolved defaults
+        // without any object allocation.
+        if (callOptions === undefined) {
+          return _formatMilliseconds(
+            language,
+            milliseconds,
+            defaultResolvedOptions,
+          );
+        }
+
+        // Per-call options provided: resolve them and merge with defaults.
+        // We resolve the call-time options first so presets are expanded,
+        // then layer the defaults underneath any explicitly set values.
+        const callResolved = resolveFormatOptions(callOptions);
+        const mergedOptions: ResolvedFormatOptions = {
+          hideUnitNames: callResolved.hideUnitNames,
+          useAbbreviations: callResolved.useAbbreviations,
+          includeZero: callResolved.includeZero,
+          includedUnits: callResolved.includedUnits,
+          unitLimit: callResolved.unitLimit,
+          unitSeparator: callResolved.unitSeparator,
+          minimumDigits: callResolved.minimumDigits,
+          __transformDuration__: callResolved.__transformDuration__,
+        };
+        return _formatMilliseconds(language, milliseconds, mergedOptions);
       }
 
       case 'string': {
