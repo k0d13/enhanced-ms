@@ -1,11 +1,11 @@
-import type { CompiledLanguage } from '~/language/compile';
-import { formatUnit } from './format-unit';
-import { parseMilliseconds } from './parse-milliseconds';
+import type { CompiledLanguage } from "~/language/compile";
+import { formatUnit } from "./format-unit";
+import { parseMilliseconds } from "./parse-milliseconds";
 import {
   type FormatOptions,
   type FormatOptionsPreset,
   resolveFormatOptions,
-} from './resolve-options';
+} from "./resolve-options";
 
 /**
  * Formats a duration given in milliseconds into a human-readable string.
@@ -31,15 +31,11 @@ export function formatMilliseconds(
   const { includedUnits } = resolvedOptions;
   const time = parseMilliseconds(milliseconds, includedUnits);
   const entries = [];
-  for (const unit in time) {
-    if (!language.timeUnits[unit])
-      console.log(unit, Object.keys(language.timeUnits));
-
+  for (const unit in time)
     entries.push({
       unit: language.timeUnits[unit]!,
       amount: time[unit as keyof typeof time],
     });
-  }
 
   // ===== Filtering ===== //
 

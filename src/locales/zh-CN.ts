@@ -2,17 +2,17 @@ export default {
   decimal: '.',
   and: '和',
   units: {
-    NanoSecond: {
+    Nanosecond: {
       name: '纳秒',
       abbreviation: 'ns',
       matches: ['纳秒', 'ns'],
     },
-    MicroSecond: {
+    Microsecond: {
       name: '微秒',
       abbreviation: 'μs',
       matches: ['微秒', 'μs', 'us'],
     },
-    MilliSecond: {
+    Millisecond: {
       name: '毫秒',
       abbreviation: 'ms',
       matches: ['毫秒', 'ms'],

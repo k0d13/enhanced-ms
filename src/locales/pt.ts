@@ -3,17 +3,17 @@ export default {
   and: 'e',
 
   units: {
-    NanoSecond: {
+    Nanosecond: {
       name: (c) => (c === 1 ? 'nanossegundo' : 'nanossegundos'),
       abbreviation: 'ns',
       matches: ['nanossegundo', 'nanossegundos', 'ns'],
     },
-    MicroSecond: {
+    Microsecond: {
       name: (c) => (c === 1 ? 'microssegundo' : 'microssegundos'),
       abbreviation: 'μs',
       matches: ['microssegundo', 'microssegundos', 'μs'],
     },
-    MilliSecond: {
+    Millisecond: {
       name: (c) => (c === 1 ? 'milissegundo' : 'milissegundos'),
       abbreviation: 'ms',
       matches: ['milissegundo', 'milissegundos', 'ms'],

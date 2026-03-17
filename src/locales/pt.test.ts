@@ -1,7 +1,8 @@
 import { createMs } from 'enhanced-ms';
 import { describe, expect, it } from 'vitest';
+import pt from './pt';
 
-const ms = createMs({ language: 'pt' });
+const ms = createMs({ language: pt });
 
 describe('Portuguese', () => {
   describe('format milliseconds', () => {

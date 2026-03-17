@@ -1,7 +1,7 @@
 export const Time = {
-  NanoSecond: 0.000_001,
-  MicroSecond: 0.001,
-  MilliSecond: 1,
+  Nanosecond: 0.000_001,
+  Microsecond: 0.001,
+  Millisecond: 1,
   Second: 1_000,
   Minute: 60_000,
   Hour: 3_600_000,

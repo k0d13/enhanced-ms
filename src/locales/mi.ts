@@ -3,7 +3,7 @@ export default {
   and: 'me te',
 
   units: {
-    NanoSecond: {
+    Nanosecond: {
       name: 'hēkona nanomiri',
       matches: [
         'hēkona nanomiri',
@@ -12,7 +12,7 @@ export default {
         'hekonananomiri',
       ],
     },
-    MicroSecond: {
+    Microsecond: {
       name: 'hēkona miriona',
       matches: [
         'hēkona miriona',
@@ -21,7 +21,7 @@ export default {
         'hekonamiriona',
       ],
     },
-    MilliSecond: {
+    Millisecond: {
       name: 'hēkona miri',
       matches: ['hēkona miri', 'kākonamiri', 'hekona miri', 'hekonamiri'],
     },

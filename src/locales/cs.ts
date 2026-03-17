@@ -31,17 +31,17 @@ export default {
   and: 'a',
 
   units: {
-    NanoSecond: {
+    Nanosecond: {
       name: (c) => formatTime('nanosekundy', c),
       abbreviation: 'ns',
       matches: ['ns', 'nanosekunda', 'nanosekundy', 'nanosekund'],
     },
-    MicroSecond: {
+    Microsecond: {
       name: (c) => formatTime('mikrosekundy', c),
       abbreviation: 'μs',
       matches: ['μs', 'us', 'mikrosekunda', 'mikrosekundy', 'mikrosekund'],
     },
-    MilliSecond: {
+    Millisecond: {
       name: (c) => formatTime('milisekundy', c),
       abbreviation: 'ms',
       matches: ['ms', 'milisekunda', 'milisekundy', 'milisekund'],
