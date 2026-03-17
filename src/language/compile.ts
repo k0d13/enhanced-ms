@@ -22,18 +22,14 @@ export interface CompiledLanguage {
 
 const cache = new WeakMap<LanguageDefinition, CompiledLanguage>();
 
-export function compileLanguage(
-  definition: LanguageDefinition,
-): CompiledLanguage {
+export function compileLanguage(definition: LanguageDefinition): CompiledLanguage {
   const cached = cache.get(definition);
   if (cached) return cached;
 
   const andValue = definition.and;
   const decimalSeparator = definition.decimal;
   const thousandSeparator = decimalSeparator === '.' ? ',' : '.';
-  const supportsAbbreviation = Object.values(definition.units).every(
-    (u) => u.abbreviation,
-  );
+  const supportsAbbreviation = Object.values(definition.units).every((u) => u.abbreviation);
 
   const matcherRegex = new RegExp(
     `(?![${decimalSeparator}${thousandSeparator}])` +

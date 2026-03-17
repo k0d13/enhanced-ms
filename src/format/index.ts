@@ -24,11 +24,7 @@ export function formatMilliseconds(
   milliseconds: number,
   options?: FormatOptions | FormatOptionsPreset,
 ) {
-  return _formatMilliseconds(
-    language,
-    milliseconds,
-    resolveFormatOptions(options),
-  );
+  return _formatMilliseconds(language, milliseconds, resolveFormatOptions(options));
 }
 
 /**
@@ -41,13 +37,8 @@ export function _formatMilliseconds(
   milliseconds: number,
   resolvedOptions: ResolvedFormatOptions,
 ) {
-  const {
-    includedUnits,
-    includeZero,
-    unitLimit,
-    unitSeparator,
-    __transformDuration__,
-  } = resolvedOptions;
+  const { includedUnits, includeZero, unitLimit, unitSeparator, __transformDuration__ } =
+    resolvedOptions;
 
   // Single pass: decompose milliseconds, filter zeros, and format — all at
   // once.  This replaces the original four separate passes (parseMilliseconds
@@ -72,7 +63,5 @@ export function _formatMilliseconds(
   }
 
   const duration = parts.length > 0 ? parts.join(unitSeparator) : null;
-  return duration && __transformDuration__
-    ? __transformDuration__(duration)
-    : duration;
+  return duration && __transformDuration__ ? __transformDuration__(duration) : duration;
 }

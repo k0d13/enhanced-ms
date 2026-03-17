@@ -146,6 +146,7 @@ export function resolveFormatOptions(
     minimumDigits = defaultFormatOptions.minimumDigits,
     __transformDuration__,
   } = options;
+  if (includeSubMs) includeMs = true;
 
   if (includeMs || includeSubMs) {
     includedUnits = [...includedUnits];
@@ -199,6 +200,8 @@ const resolvedPresets = Object.fromEntries(
         minimumDigits = defaultFormatOptions.minimumDigits,
         __transformDuration__,
       } = p;
+      if (includeSubMs) includeMs = true;
+
       if (includeMs || includeSubMs) {
         includedUnits = [...includedUnits];
         if (includeMs) includedUnits.push('millisecond');

@@ -16,20 +16,14 @@ import type { ResolvedFormatOptions } from './resolve-options';
 export function formatUnit(
   unit: CompiledLanguage['timeUnits'][string],
   count: number,
-  options: Pick<
-    ResolvedFormatOptions,
-    'useAbbreviations' | 'hideUnitNames' | 'minimumDigits'
-  >,
+  options: Pick<ResolvedFormatOptions, 'useAbbreviations' | 'hideUnitNames' | 'minimumDigits'>,
 ) {
   const { useAbbreviations, hideUnitNames, minimumDigits } = options;
 
   // Skip padStart entirely when minimumDigits is 0 (the default) — avoids a
   // string method call on every formatted unit.
   const countStr = String(count);
-  const amount =
-    minimumDigits > countStr.length
-      ? countStr.padStart(minimumDigits, '0')
-      : countStr;
+  const amount = minimumDigits > countStr.length ? countStr.padStart(minimumDigits, '0') : countStr;
 
   if (hideUnitNames) return amount;
   const name = pluraliseUnit(unit, count, options);
@@ -55,9 +49,6 @@ export function pluraliseUnit(
   options: Pick<ResolvedFormatOptions, 'useAbbreviations'>,
 ) {
   const { useAbbreviations } = options;
-  const factory =
-    useAbbreviations && unit.abbreviation ? unit.abbreviation : unit.name;
-  return typeof factory === 'function'
-    ? factory(count < 0 ? -count : count)
-    : factory;
+  const factory = useAbbreviations && unit.abbreviation ? unit.abbreviation : unit.name;
+  return typeof factory === 'function' ? factory(count < 0 ? -count : count) : factory;
 }

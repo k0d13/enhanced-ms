@@ -97,9 +97,7 @@ export function createMs(options: CreateMsOptions) {
   // that does not supply per-call options.
   const defaultResolvedOptions = resolveFormatOptions(options.formatOptions);
 
-  function ms(
-    ...args: [number, (FormatOptions | FormatOptionsPreset)?] | [string]
-  ) {
+  function ms(...args: [number, (FormatOptions | FormatOptionsPreset)?] | [string]) {
     switch (typeof args[0]) {
       case 'number': {
         const [milliseconds, callOptions] = args;
@@ -107,11 +105,7 @@ export function createMs(options: CreateMsOptions) {
         // Fast-path: no per-call options — reuse the pre-resolved defaults
         // without any object allocation.
         if (callOptions === undefined) {
-          return _formatMilliseconds(
-            language,
-            milliseconds,
-            defaultResolvedOptions,
-          );
+          return _formatMilliseconds(language, milliseconds, defaultResolvedOptions);
         }
 
         // Per-call options provided: resolve them and merge with defaults.

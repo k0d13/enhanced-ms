@@ -1,3 +1,0 @@
-- duration to milliseconds, 15% faster
-- milliseconds to duration, 50% faster
-- locales are now exported separately

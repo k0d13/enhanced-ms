@@ -2,7 +2,7 @@ name: Setup Node.js
 description: Setup Node.js, PNPM, and install dependencies
 
 runs:
-  using: "composite"
+  using: 'composite'
   steps:
     - uses: pnpm/action-setup@v4
 
@@ -10,7 +10,7 @@ runs:
       uses: actions/setup-node@v4
       with:
         node-version: 24
-        registry-url: "https://registry.npmjs.org"
+        registry-url: 'https://registry.npmjs.org'
         cache: pnpm
 
     - name: Install dependencies

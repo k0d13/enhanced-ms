@@ -5,21 +5,11 @@ export default {
   units: {
     Nanosecond: {
       name: 'hēkona nanomiri',
-      matches: [
-        'hēkona nanomiri',
-        'hēkonananomiri',
-        'hekona nanomiri',
-        'hekonananomiri',
-      ],
+      matches: ['hēkona nanomiri', 'hēkonananomiri', 'hekona nanomiri', 'hekonananomiri'],
     },
     Microsecond: {
       name: 'hēkona miriona',
-      matches: [
-        'hēkona miriona',
-        'hēkonamiriona',
-        'hekona miriona',
-        'hekonamiriona',
-      ],
+      matches: ['hēkona miriona', 'hēkonamiriona', 'hekona miriona', 'hekonamiriona'],
     },
     Millisecond: {
       name: 'hēkona miri',

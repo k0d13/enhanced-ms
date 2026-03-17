@@ -75,11 +75,11 @@ function createMs(options?: CreateMsOptions): typeof ms;
 | `formatOptions` | `FormatOptions` \| `FormatOptionsPreset` | The options to use for formatting.              | see below |
 
 ```ts
-import fr from "enhanced-ms/locales/fr";
+import fr from 'enhanced-ms/locales/fr';
 
 const ms = createMs({
   language: fr,
-  formatOptions: "short",
+  formatOptions: 'short',
 });
 
 ms(1000); // '1 seconde 111 millisecondes'
