@@ -7,6 +7,7 @@ import {
 } from './format/resolve-options';
 import { compileLanguage } from './language/compile';
 import type { LanguageDefinition } from './language/definition';
+import en from './locales/en';
 import { parseDuration } from './parse';
 
 /**
@@ -91,7 +92,7 @@ export interface CreateMsOptions {
  * const ms = createMs({ language: de });
  */
 export function createMs(options: CreateMsOptions) {
-  const language = compileLanguage(options.language);
+  const language = compileLanguage(options.language ?? en);
   // Resolve once at construction time; the result is reused for every call
   // that does not supply per-call options.
   const defaultResolvedOptions = resolveFormatOptions(options.formatOptions);
