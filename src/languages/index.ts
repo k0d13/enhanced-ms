@@ -9,6 +9,7 @@ import it from './it';
 import mi from './mi';
 import nl from './nl';
 import pl from './pl';
+import pt from './pt';
 import ru from './ru';
 import zhCN from './zh-CN';
 
@@ -23,6 +24,7 @@ type Locale =
   | 'mi'
   | 'nl'
   | 'pl'
+  | 'pt'
   | 'ru'
   | 'zh-CN';
 type Languages = Record<Locale, LanguageDefinition>;
@@ -36,6 +38,7 @@ export const languages: Languages = {
   mi,
   nl,
   pl,
+  pt,
   ru,
   'zh-CN': zhCN,
 };
