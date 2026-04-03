@@ -1,60 +1,37 @@
 {
   "name": "enhanced-ms",
   "version": "4.3.0",
-  "packageManager": "pnpm@9.15.4",
-  "type": "module",
-  "description": "Convert milliseconds to human-readable duration strings and vice versa",
-  "license": "MIT",
-  "keywords": [
-    "humanize",
-    "duration",
-    "ms",
-    "time",
-    "readable",
-    "format",
-    "parse",
-    "pretty",
-    "print"
+  "files": [
+    "dist",
+    "!dist/**/*.map"
   ],
-  "homepage": "https://github.com/k0d13/enhanced-ms#readme",
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/k0d13/enhanced-ms.git"
-  },
-  "bugs": {
-    "url": "https://github.com/k0d13/enhanced-ms/issues"
-  },
-  "files": ["dist"],
-  "main": "./dist/index.cjs",
+  "type": "module",
   "exports": {
     ".": {
-      "types": "./dist/index.d.ts",
-      "require": "./dist/index.cjs",
-      "import": "./dist/index.js"
+      "types": "./dist/index.d.mts",
+      "default": "./dist/index.mjs"
+    },
+    "./locales/*": {
+      "types": "./dist/locales/*.d.mts",
+      "default": "./dist/locales/*.mjs"
     }
   },
   "scripts": {
-    "lint": "biome ci .",
-    "format": "biome check . --write",
     "check": "tsc --noEmit",
-    "build": "tsup",
-    "dev": "tsup --watch",
+    "lint": "oxlint",
+    "format": "oxfmt",
     "test": "vitest --run",
-    "prepare": "husky",
-    "change": "changeset",
-    "release:version": "changeset version && biome format package.json --write",
-    "release:snapshot:version": "changeset version --snapshot beta && biome format package.json --write",
-    "release:publish": "pnpm build && changeset publish",
-    "release:snapshot:publish": "pnpm build && changeset publish --tag beta --no-git-tag"
+    "build": "tsdown"
   },
   "devDependencies": {
-    "@biomejs/biome": "^1.9.4",
-    "@changesets/cli": "^2.27.12",
+    "@changesets/cli": "^2.30.0",
     "@changesets/config": "^3.1.3",
-    "husky": "^9.1.7",
-    "tsup": "^8.3.6",
-    "typescript": "^5.7.3",
-    "vite-tsconfig-paths": "^5.1.4",
-    "vitest": "^3.0.4"
-  }
+    "oxfmt": "^0.43.0",
+    "oxlint": "^1.58.0",
+    "tsdown": "^0.21.7",
+    "typescript": "^6.0.2",
+    "vite-tsconfig-paths": "^6.1.1",
+    "vitest": "^4.1.2"
+  },
+  "packageManager": "pnpm@10.33.0"
 }

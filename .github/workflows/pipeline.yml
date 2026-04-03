@@ -4,24 +4,12 @@ on:
   push:
     branches: [main]
     paths:
-      [
-        "package.json",
-        "pnpm-lock.yaml",
-        "src/**",
-        "tests/**",
-        ".github/workflows/pipeline.yml",
-      ]
+      ['package.json', 'pnpm-lock.yaml', 'src/**', 'tests/**', '.github/workflows/pipeline.yml']
   pull_request:
     branches: [main]
     types: [opened, synchronize, reopened]
     paths:
-      [
-        "package.json",
-        "pnpm-lock.yaml",
-        "src/**",
-        "tests/**",
-        ".github/workflows/pipeline.yml",
-      ]
+      ['package.json', 'pnpm-lock.yaml', 'src/**', 'tests/**', '.github/workflows/pipeline.yml']
   workflow_dispatch:
 
 concurrency:
@@ -137,8 +125,8 @@ jobs:
         with:
           version: pnpm run release:version
           publish: pnpm run release:publish
-          title: "Pending Releases"
-          commit: "Update changelog and release"
+          title: 'Pending Releases'
+          commit: 'Update changelog and release'
 
       - run: |
           echo "published=${{ steps.changesets.outputs.published }}" >> $GITHUB_OUTPUT

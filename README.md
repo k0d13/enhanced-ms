@@ -24,16 +24,6 @@
 - [🚀 Usage](#-usage)
 - [🌀 Examples](#-examples)
 
-## 📦 Installation
-
-Install using your preferred package manager:
-
-```bash
-npm install enhanced-ms
-pnpm add enhanced-ms
-yarn add enhanced-ms
-```
-
 ## 🧭 Comparison
 
 As mentioned above, `enhanced-ms` is an enhanced version of the popular [`ms`](https://www.npmjs.com/package/ms), so how does it compare?
@@ -50,24 +40,24 @@ As mentioned above, `enhanced-ms` is an enhanced version of the popular [`ms`](h
 
 The currently supported languages include:
 
-| Language              | Key   |
-| --------------------- | ----- |
-| English (default)     | en    |
-| German                | de    |
-| Russian               | ru    |
-| Māori                 | mi    |
-| Spanish               | es    |
-| Dutch                 | nl    |
-| Italian               | it    |
-| French                | fr    |
-| Czech                 | cs    |
-| Polish                | pl    |
-| Portuguese            | pt    |
-| Chinese (Simplified)  | zh-CN |
+| Language             | Key   |
+| -------------------- | ----- |
+| English (default)    | en    |
+| Chinese (Simplified) | zh-CN |
+| Spanish              | es    |
+| French               | fr    |
+| Portuguese           | pt    |
+| Russian              | ru    |
+| German               | de    |
+| Italian              | it    |
+| Polish               | pl    |
+| Dutch                | nl    |
+| Czech                | cs    |
+| Māori                | mi    |
 
 You can help by adding support for more languages.
 
-Make a pull request [here](https://github.com/k0d13/enhanced-ms/tree/main/src/languages).
+Make a pull request [here](https://github.com/k0d13/enhanced-ms/tree/main/src/locales).
 
 ## 🚀 Usage
 
@@ -79,10 +69,21 @@ The `createMs` function allows you to create a new instance of `ms` with a custo
 function createMs(options?: CreateMsOptions): typeof ms;
 ```
 
-| Option          | Type                                     | Description                                                                                                                     | Default   |
-| --------------- | ---------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------- | --------- |
-| `language`      | `Locale` \| `LanguageDefinition`         | The language to use for parsing and formatting, if your preferred isn't supported, you can directly pass a language definition. | `en`      |
-| `formatOptions` | `FormatOptions` \| `FormatOptionsPreset` | The options to use for formatting.                                                                                              | see below |
+| Option          | Type                                     | Description                                     | Default   |
+| --------------- | ---------------------------------------- | ----------------------------------------------- | --------- |
+| `language`      | `LanguageDefinition`                     | The language to use for parsing and formatting. | none      |
+| `formatOptions` | `FormatOptions` \| `FormatOptionsPreset` | The options to use for formatting.              | see below |
+
+```ts
+import fr from 'enhanced-ms/locales/fr';
+
+const ms = createMs({
+  language: fr,
+  formatOptions: 'short',
+});
+
+ms(1000); // '1 seconde 111 millisecondes'
+```
 
 ### Formatting Milliseconds to Duration
 
@@ -94,18 +95,17 @@ function ms(milliseconds: number, options: FormatOptions): string | null;
 function ms(milliseconds: number, preset: FormatOptionsPreset): string | null;
 ```
 
-| Option             | Type                  | Description                                                        | Default                                       |
-| ------------------ | --------------------- | ------------------------------------------------------------------ | --------------------------------------------- |
-| `extends`          | `FormatOptionsPreset` | Extends the preset with the given options.                         | none                                          |
-| `hideUnitNames`    | `boolean`             | Hide unit names from the output.                                   | `false`                                       |
-| `useAbbreviations` | `boolean`             | Use abbreviations for unit names.                                  | `false`                                       |
-| `includeZero`      | `boolean`             | Include units with the value 0 in the output.                      | `false`                                       |
-| `includeMs`        | `boolean`             | Include milliseconds in the output.                                | `false`                                       |
-| `includeSubMs`     | `boolean`             | Include sub-millisecond units in the output.                       | `false`                                       |
-| `includedUnits`    | `ParseUnit[]`         | Which units should be included in the output.                      | `['year', 'day', 'hour', 'minute', 'second']` |
-| `unitLimit`        | `number`              | The maximum number of units to include in the output.              | `-1`                                          |
-| `unitSeparator`    | `string`              | The separator to use between units.                                | ` `                                           |
-| `minimumDigits`    | `number`              | The minimum number of digits for a unit, aka will pad with zeroes. | `0`                                           |
+| Option             | Type      | Description                                                        | Default                                       |
+| ------------------ | --------- | ------------------------------------------------------------------ | --------------------------------------------- |
+| `hideUnitNames`    | `boolean` | Hide unit names from the output.                                   | `false`                                       |
+| `useAbbreviations` | `boolean` | Use abbreviations for unit names.                                  | `false`                                       |
+| `includeZero`      | `boolean` | Include units with the value 0 in the output.                      | `false`                                       |
+| `includeMs`        | `boolean` | Include milliseconds in the output.                                | `false`                                       |
+| `includeSubMs`     | `boolean` | Include sub-millisecond units in the output.                       | `false`                                       |
+| `includedUnits`    | `Time[]`  | Which units should be included in the output.                      | `['year', 'day', 'hour', 'minute', 'second']` |
+| `unitLimit`        | `number`  | The maximum number of units to include in the output.              | `-1`                                          |
+| `unitSeparator`    | `string`  | The separator to use between units.                                | ` `                                           |
+| `minimumDigits`    | `number`  | The minimum number of digits for a unit, aka will pad with zeroes. | `0`                                           |
 
 | Preset          | Example                                                        |
 | --------------- | -------------------------------------------------------------- |
@@ -115,8 +115,8 @@ function ms(milliseconds: number, preset: FormatOptionsPreset): string | null;
 
 ### Parsing Duration to Milliseconds
 
-The `ms` function also allows you to parse a duration string (`1 day`, `3 weeks 4 days`, etc). Passing a duration string will return a number of milliseconds, if no valid duration units are found, it will return `0`.
+The `ms` function also allows you to parse a duration string (`1 day`, `3 weeks 4 days`, etc). Passing a duration string will return a number of milliseconds, if no valid duration units are found, it will return `null`.
 
 ```ts
-function ms(duration: string): number;
+function ms(duration: string): number | null;
 ```

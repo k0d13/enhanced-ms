@@ -1,9 +1,8 @@
-"dependencies":
+'dependencies':
   - changed-files:
-      - any-glob-to-any-file: ["pnpm-lock.yaml"]
+      - any-glob-to-any-file: ['pnpm-lock.yaml']
 
-"languages":
+'languages':
   - changed-files:
       - any-glob-to-any-file:
-          - "src/languages/*"
-          - "src/languages/**/*"
+          - 'src/locales/*.ts'

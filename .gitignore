@@ -1,5 +1,4 @@
-# Node
-node_modules/
-
-# Build
-dist/
+.ignore
+bench
+dist
+node_modules

@@ -1,12 +1,10 @@
-import { type Language, getLanguage } from '~/languages/helpers/make-language';
-import { formatUnit } from './helpers/format-unit';
-import { parseMilliseconds } from './helpers/parse-milliseconds';
+import type { CompiledLanguage } from '~/language/compile';
 import {
   type FormatOptions,
   type FormatOptionsPreset,
+  type ResolvedFormatOptions,
   resolveFormatOptions,
-  resolveFormatPresetOptions,
-} from './helpers/resolve-options';
+} from './resolve-options';
 
 /**
  * Formats a duration given in milliseconds into a human-readable string.
@@ -17,58 +15,73 @@ import {
  * @returns A formatted duration string (e.g., "1 hour, 30 minutes") or `null` if the duration is invalid
  *
  * @example
- * formatMilliseconds(90061000)
- * // Returns: "1 day 1 hour 1 minute"
- * formatMilliseconds(90061000, getLanguage('ru'), { useAbbreviations: 'short' })
- * // Returns: "1д 1ч 1м"
+ * formatMilliseconds(en, 90061000) // "1 day 1 hour 1 minute"
+ * formatMilliseconds(ru, 90061000, { useAbbreviations: true }) // "1д 1ч 1м"
  */
 export function formatMilliseconds(
+  language: CompiledLanguage,
   milliseconds: number,
-  language: Language = getLanguage('en'),
-  options: FormatOptions | FormatOptionsPreset = {},
+  options?: FormatOptions | FormatOptionsPreset,
 ) {
-  const presetOptions = resolveFormatPresetOptions(options);
-  const resolvedOptions = resolveFormatOptions(presetOptions);
+  return _formatMilliseconds(language, milliseconds, resolveFormatOptions(options));
+}
 
-  // ===== Parsing ===== //
+/**
+ * Internal variant that accepts a pre-resolved options object directly,
+ * skipping the options-resolution step. Used by `createMs` to avoid
+ * resolving the same default options on every call.
+ */
+export function _formatMilliseconds(
+  language: CompiledLanguage,
+  milliseconds: number,
+  resolvedOptions: ResolvedFormatOptions,
+) {
+  const {
+    includedUnits,
+    includeZero,
+    unitLimit,
+    unitSeparator,
+    hideUnitNames,
+    useAbbreviations,
+    minimumDigits,
+    __transformDuration__,
+  } = resolvedOptions;
 
-  const { includedUnits } = resolvedOptions;
+  let remaining = Math.abs(milliseconds);
+  let duration = '';
+  let partCount = 0;
 
-  const time = parseMilliseconds(milliseconds, includedUnits);
-  const entries = [];
-  for (const key in time) {
-    const unit = key as keyof typeof time;
-    const value = time[unit];
-    entries.push({ unit: language.timeUnits[unit], amount: value });
+  for (let i = 0; i < includedUnits.length; i++) {
+    if (unitLimit !== -1 && partCount >= unitLimit) break;
+
+    const unitKey = includedUnits[i]!;
+    const langUnit = language.timeUnits[unitKey];
+    if (!langUnit) continue;
+
+    const amount = Math.trunc(remaining / langUnit.ms);
+    remaining %= langUnit.ms;
+
+    if (amount === 0 && !includeZero) continue;
+
+    const amountText =
+      minimumDigits === 2 && amount < 10
+        ? `0${amount}`
+        : minimumDigits > 0
+          ? String(amount).padStart(minimumDigits, '0')
+          : String(amount);
+
+    let part = amountText;
+    if (!hideUnitNames) {
+      const factory =
+        useAbbreviations && langUnit.abbreviation ? langUnit.abbreviation : langUnit.name;
+      const unitName = typeof factory === 'function' ? factory(amount) : factory;
+      part = useAbbreviations ? `${amountText}${unitName}` : `${amountText} ${unitName}`;
+    }
+
+    duration = partCount === 0 ? part : duration + unitSeparator + part;
+    partCount++;
   }
 
-  // ===== Filtering ===== //
-
-  const { includeZero } = resolvedOptions;
-
-  const filtered = entries.filter((entry) => {
-    if (entry.amount === null) return false;
-    if (entry.amount === 0) return includeZero;
-    return true;
-  });
-
-  // ===== Formatting ==== //
-
-  const { unitLimit } = resolvedOptions;
-
-  const formatted = [];
-  for (let i = 0; i < filtered.length; i++) {
-    const entry = filtered.at(i)!;
-    if (unitLimit !== -1 && formatted.length >= unitLimit) break;
-    const format = formatUnit(entry.unit, entry.amount!, resolvedOptions);
-    formatted.push(format);
-  }
-
-  // ===== Joining ===== //
-
-  const { unitSeparator, __transformDuration__ } = resolvedOptions;
-  const duration = formatted.join(unitSeparator) || null;
-  return duration && __transformDuration__
-    ? __transformDuration__(duration)
-    : duration;
+  if (partCount === 0) return null;
+  return __transformDuration__ ? __transformDuration__(duration) : duration;
 }
