@@ -23,7 +23,6 @@
     "test": "vitest --run",
     "dev": "tsdown --watch",
     "build": "tsdown",
-    "prepare": "husky",
     "change": "changeset",
     "release:version": "changeset version && biome format package.json --write",
     "release:snapshot:version": "changeset version --snapshot beta && biome format package.json --write",
