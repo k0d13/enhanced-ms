@@ -21,7 +21,14 @@
     "lint": "oxlint",
     "format": "oxfmt",
     "test": "vitest --run",
-    "build": "tsdown"
+    "dev": "tsdown --watch",
+    "build": "tsdown",
+    "prepare": "husky",
+    "change": "changeset",
+    "release:version": "changeset version && biome format package.json --write",
+    "release:snapshot:version": "changeset version --snapshot beta && biome format package.json --write",
+    "release:publish": "pnpm build && changeset publish",
+    "release:snapshot:publish": "pnpm build && changeset publish --tag beta --no-git-tag"
   },
   "devDependencies": {
     "@changesets/cli": "^2.30.0",
