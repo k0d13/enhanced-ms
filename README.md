@@ -43,21 +43,21 @@ The currently supported languages include:
 | Language             | Key   |
 | -------------------- | ----- |
 | English (default)    | en    |
-| German               | de    |
-| Russian              | ru    |
-| Māori                | mi    |
-| Spanish              | es    |
-| Dutch                | nl    |
-| Italian              | it    |
-| French               | fr    |
-| Czech                | cs    |
-| Polish               | pl    |
-| Portuguese           | pt    |
 | Chinese (Simplified) | zh-CN |
+| Spanish              | es    |
+| French               | fr    |
+| Portuguese           | pt    |
+| Russian              | ru    |
+| German               | de    |
+| Italian              | it    |
+| Polish               | pl    |
+| Dutch                | nl    |
+| Czech                | cs    |
+| Māori                | mi    |
 
 You can help by adding support for more languages.
 
-Make a pull request [here](https://github.com/k0d13/enhanced-ms/tree/main/src/languages).
+Make a pull request [here](https://github.com/k0d13/enhanced-ms/tree/main/src/locales).
 
 ## 🚀 Usage
 
