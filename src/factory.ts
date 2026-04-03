@@ -110,7 +110,7 @@ export function createMs(options: CreateMsOptions) {
 
       case 'string': {
         const [duration] = args;
-        return parseDuration(language, duration) ?? 0;
+        return parseDuration(language, duration);
       }
 
       default:

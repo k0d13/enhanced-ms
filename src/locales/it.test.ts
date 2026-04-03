@@ -51,8 +51,8 @@ describe('Italian (Italiano)', () => {
     });
 
     it('returns zero for invalid duration strings', () => {
-      expect(ms('nyr9341')).toBe(0);
-      expect(ms('o4utrc89nyt')).toBe(0);
+      expect(ms('nyr9341')).toBe(null);
+      expect(ms('o4utrc89nyt')).toBe(null);
     });
   });
 });

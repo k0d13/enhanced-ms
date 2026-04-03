@@ -58,8 +58,8 @@ describe('Portuguese', () => {
     });
 
     it('returns zero for invalid durations', () => {
-      expect(ms('nyr9341')).toBe(0);
-      expect(ms('o4utrc89nyt')).toBe(0);
+      expect(ms('nyr9341')).toBe(null);
+      expect(ms('o4utrc89nyt')).toBe(null);
     });
   });
 });
