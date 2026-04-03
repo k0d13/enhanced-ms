@@ -115,8 +115,8 @@ function ms(milliseconds: number, preset: FormatOptionsPreset): string | null;
 
 ### Parsing Duration to Milliseconds
 
-The `ms` function also allows you to parse a duration string (`1 day`, `3 weeks 4 days`, etc). Passing a duration string will return a number of milliseconds, if no valid duration units are found, it will return `0`.
+The `ms` function also allows you to parse a duration string (`1 day`, `3 weeks 4 days`, etc). Passing a duration string will return a number of milliseconds, if no valid duration units are found, it will return `null`.
 
 ```ts
-function ms(duration: string): number;
+function ms(duration: string): number | null;
 ```

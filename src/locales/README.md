@@ -35,4 +35,4 @@ Add tests to ensure the library handles them correctly if changes are made in th
 
 ## 6. Create a changeset and open a pull request
 
-Once you're done, run `pnpm change` to create a changeset for the new language. Follow the prompts to describe the changes and select the appropriate type. Then, open a new pull request on the repository.
+Once you're done, run `pnpm changeset` to create a changeset for the new language. Follow the prompts to describe the changes and select the appropriate type. Then, open a new pull request on the repository.

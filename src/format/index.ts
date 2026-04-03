@@ -1,5 +1,4 @@
 import type { CompiledLanguage } from '~/language/compile';
-import { formatUnit } from './format-unit';
 import {
   type FormatOptions,
   type FormatOptionsPreset,
@@ -29,7 +28,7 @@ export function formatMilliseconds(
 
 /**
  * Internal variant that accepts a pre-resolved options object directly,
- * skipping the options-resolution step.  Used by `createMs` to avoid
+ * skipping the options-resolution step. Used by `createMs` to avoid
  * resolving the same default options on every call.
  */
 export function _formatMilliseconds(
@@ -37,18 +36,23 @@ export function _formatMilliseconds(
   milliseconds: number,
   resolvedOptions: ResolvedFormatOptions,
 ) {
-  const { includedUnits, includeZero, unitLimit, unitSeparator, __transformDuration__ } =
-    resolvedOptions;
+  const {
+    includedUnits,
+    includeZero,
+    unitLimit,
+    unitSeparator,
+    hideUnitNames,
+    useAbbreviations,
+    minimumDigits,
+    __transformDuration__,
+  } = resolvedOptions;
 
-  // Single pass: decompose milliseconds, filter zeros, and format — all at
-  // once.  This replaces the original four separate passes (parseMilliseconds
-  // → entries[] → filtered[] → formatted[]) with a single loop and one array.
   let remaining = Math.abs(milliseconds);
-  const parts: string[] = [];
+  let duration = '';
+  let partCount = 0;
 
   for (let i = 0; i < includedUnits.length; i++) {
-    // Honour unitLimit early to skip unnecessary iterations
-    if (unitLimit !== -1 && parts.length >= unitLimit) break;
+    if (unitLimit !== -1 && partCount >= unitLimit) break;
 
     const unitKey = includedUnits[i]!;
     const langUnit = language.timeUnits[unitKey];
@@ -59,9 +63,25 @@ export function _formatMilliseconds(
 
     if (amount === 0 && !includeZero) continue;
 
-    parts.push(formatUnit(langUnit, amount, resolvedOptions));
+    const amountText =
+      minimumDigits === 2 && amount < 10
+        ? `0${amount}`
+        : minimumDigits > 0
+          ? String(amount).padStart(minimumDigits, '0')
+          : String(amount);
+
+    let part = amountText;
+    if (!hideUnitNames) {
+      const factory =
+        useAbbreviations && langUnit.abbreviation ? langUnit.abbreviation : langUnit.name;
+      const unitName = typeof factory === 'function' ? factory(amount) : factory;
+      part = useAbbreviations ? `${amountText}${unitName}` : `${amountText} ${unitName}`;
+    }
+
+    duration = partCount === 0 ? part : duration + unitSeparator + part;
+    partCount++;
   }
 
-  const duration = parts.length > 0 ? parts.join(unitSeparator) : null;
-  return duration && __transformDuration__ ? __transformDuration__(duration) : duration;
+  if (partCount === 0) return null;
+  return __transformDuration__ ? __transformDuration__(duration) : duration;
 }

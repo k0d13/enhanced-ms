@@ -20,9 +20,9 @@ export interface CompiledLanguage {
   >;
 }
 
-const cache = new WeakMap<LanguageDefinition, CompiledLanguage>();
+const cache = new WeakMap<LanguageDefinition, Readonly<CompiledLanguage>>();
 
-export function compileLanguage(definition: LanguageDefinition): CompiledLanguage {
+export function compileLanguage(definition: LanguageDefinition) {
   const cached = cache.get(definition);
   if (cached) return cached;
 

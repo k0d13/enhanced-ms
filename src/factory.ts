@@ -2,7 +2,6 @@ import { _formatMilliseconds } from './format';
 import {
   type FormatOptions,
   type FormatOptionsPreset,
-  type ResolvedFormatOptions,
   resolveFormatOptions,
 } from './format/resolve-options';
 import { compileLanguage } from './language/compile';
@@ -56,7 +55,7 @@ export interface Ms {
    * Parse a human-readable duration string into milliseconds.
    *
    * @params duration The duration string to parse (e.g., "2h 30m", "1 day, 5 hours")
-   * @returns The total duration in milliseconds, including 0 if the duration is invalid
+   * @returns The total duration in milliseconds, or null if the duration is invalid
    *
    * @example
    * ms("1 minute 30 seconds") // 90061
@@ -68,8 +67,9 @@ export interface Ms {
 export interface CreateMsOptions {
   /**
    * The language to use for formatting and parsing.
+   * @default English
    */
-  language: LanguageDefinition;
+  language?: LanguageDefinition;
 
   /**
    * Default formatting options to use.
@@ -84,10 +84,7 @@ export interface CreateMsOptions {
  * @returns A new function that formats and parses durations
  *
  * @example
- * import en from 'enhanced-ms/locales/en';
- * const ms = createMs({ language: en });
- * import ru from 'enhanced-ms/locales/ru';
- * const ms = createMs({ language: ru });
+ * const ms = createMs({ formatOptions: 'short' });
  * import de from 'enhanced-ms/locales/de';
  * const ms = createMs({ language: de });
  */
@@ -108,21 +105,7 @@ export function createMs(options: CreateMsOptions) {
           return _formatMilliseconds(language, milliseconds, defaultResolvedOptions);
         }
 
-        // Per-call options provided: resolve them and merge with defaults.
-        // We resolve the call-time options first so presets are expanded,
-        // then layer the defaults underneath any explicitly set values.
-        const callResolved = resolveFormatOptions(callOptions);
-        const mergedOptions: ResolvedFormatOptions = {
-          hideUnitNames: callResolved.hideUnitNames,
-          useAbbreviations: callResolved.useAbbreviations,
-          includeZero: callResolved.includeZero,
-          includedUnits: callResolved.includedUnits,
-          unitLimit: callResolved.unitLimit,
-          unitSeparator: callResolved.unitSeparator,
-          minimumDigits: callResolved.minimumDigits,
-          __transformDuration__: callResolved.__transformDuration__,
-        };
-        return _formatMilliseconds(language, milliseconds, mergedOptions);
+        return _formatMilliseconds(language, milliseconds, resolveFormatOptions(callOptions));
       }
 
       case 'string': {
