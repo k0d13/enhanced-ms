@@ -24,8 +24,8 @@
     "dev": "tsdown --watch",
     "build": "tsdown",
     "change": "changeset",
-    "release:version": "changeset version && biome format package.json --write",
-    "release:snapshot:version": "changeset version --snapshot beta && biome format package.json --write",
+    "release:version": "changeset version && oxfmt package.json",
+    "release:snapshot:version": "changeset version --snapshot beta && oxfmt package.json",
     "release:publish": "pnpm build && changeset publish",
     "release:snapshot:publish": "pnpm build && changeset publish --tag beta --no-git-tag"
   },
