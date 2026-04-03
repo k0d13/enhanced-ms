@@ -1,6 +1,27 @@
 {
   "name": "enhanced-ms",
   "version": "4.3.0",
+  "description": "Convert milliseconds to human-readable duration strings and vice versa",
+  "keywords": [
+    "duration",
+    "format",
+    "humanize",
+    "ms",
+    "parse",
+    "pretty",
+    "print",
+    "readable",
+    "time"
+  ],
+  "homepage": "https://github.com/k0d13/enhanced-ms#readme",
+  "bugs": {
+    "url": "https://github.com/k0d13/enhanced-ms/issues"
+  },
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/k0d13/enhanced-ms.git"
+  },
   "files": [
     "dist",
     "!dist/**/*.map"
