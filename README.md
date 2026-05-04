@@ -61,30 +61,6 @@ Make a pull request [here](https://github.com/k0d13/enhanced-ms/tree/main/src/lo
 
 ## 🚀 Usage
 
-### Language and Default Options
-
-The `createMs` function allows you to create a new instance of `ms` with a custom language and custom default options. This is useful if you want to use a different language or prefer different default options for parsing and formatting.
-
-```ts
-function createMs(options?: CreateMsOptions): typeof ms;
-```
-
-| Option          | Type                                     | Description                                     | Default   |
-| --------------- | ---------------------------------------- | ----------------------------------------------- | --------- |
-| `language`      | `LanguageDefinition`                     | The language to use for parsing and formatting. | none      |
-| `formatOptions` | `FormatOptions` \| `FormatOptionsPreset` | The options to use for formatting.              | see below |
-
-```ts
-import fr from 'enhanced-ms/locales/fr';
-
-const ms = createMs({
-  language: fr,
-  formatOptions: 'short',
-});
-
-ms(1000); // '1 seconde 111 millisecondes'
-```
-
 ### Formatting Milliseconds to Duration
 
 The `ms` function allows you to format a number of milliseconds to a duration string. Passing a number of milliseconds will return a duration string, if the number is invalid, it will return `null`. The milliseconds overloads also allows you to pass a `FormatOptions` object or a `FormatOptionsPreset` to customise the formatting.
@@ -119,4 +95,28 @@ The `ms` function also allows you to parse a duration string (`1 day`, `3 weeks 
 
 ```ts
 function ms(duration: string): number | null;
+```
+
+### Language and Default Options
+
+The `createMs` function allows you to create a new instance of `ms` with a custom language and custom default options. This is useful if you want to use a different language or prefer different default options for parsing and formatting.
+
+```ts
+function createMs(options?: CreateMsOptions): typeof ms;
+```
+
+| Option          | Type                                     | Description                                     | Default   |
+| --------------- | ---------------------------------------- | ----------------------------------------------- | --------- |
+| `language`      | `LanguageDefinition`                     | The language to use for parsing and formatting. | none      |
+| `formatOptions` | `FormatOptions` \| `FormatOptionsPreset` | The options to use for formatting.              | see below |
+
+```ts
+import fr from "enhanced-ms/locales/fr";
+
+const ms = createMs({
+  language: fr,
+  formatOptions: "short",
+});
+
+ms(1000); // '1 seconde 111 millisecondes'
 ```
