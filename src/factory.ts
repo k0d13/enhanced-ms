@@ -61,7 +61,7 @@ export interface Ms {
    * ms("1 minute 30 seconds") // 90061
    * ms("1m 30s") // 90061
    */
-  (duration: string): number;
+  (duration: string): number | null;
 }
 
 export interface CreateMsOptions {
@@ -99,7 +99,7 @@ export function createMs(options: CreateMsOptions) {
       case 'number': {
         const [milliseconds, callOptions] = args;
 
-        // Fast-path: no per-call options — reuse the pre-resolved defaults
+        // Fast-path: no per-call options, reuse the pre-resolved defaults
         // without any object allocation.
         if (callOptions === undefined) {
           return _formatMilliseconds(language, milliseconds, defaultResolvedOptions);

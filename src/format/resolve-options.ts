@@ -168,7 +168,7 @@ export function resolveFormatOptions(
 
 // ==== //
 
-// Pre-resolve the defaults and each preset once at module load — avoids
+// Pre-resolve the defaults and each preset once at module load, avoids
 // object allocation on every call for the common no-options / preset path.
 export const resolvedDefaultFormatOptions: ResolvedFormatOptions = {
   hideUnitNames: defaultFormatOptions.hideUnitNames,

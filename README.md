@@ -107,16 +107,16 @@ function createMs(options?: CreateMsOptions): typeof ms;
 
 | Option          | Type                                     | Description                                     | Default   |
 | --------------- | ---------------------------------------- | ----------------------------------------------- | --------- |
-| `language`      | `LanguageDefinition`                     | The language to use for parsing and formatting. | none      |
-| `formatOptions` | `FormatOptions` \| `FormatOptionsPreset` | The options to use for formatting.              | see below |
+| `language`      | `LanguageDefinition`                     | The language to use for parsing and formatting. | English   |
+| `formatOptions` | `FormatOptions` \| `FormatOptionsPreset` | The options to use for formatting.              | see above |
 
 ```ts
 import fr from "enhanced-ms/locales/fr";
 
 const ms = createMs({
   language: fr,
-  formatOptions: "short",
+  formatOptions: "fullPrecision",
 });
 
-ms(1000); // '1 seconde 111 millisecondes'
+ms(1111); // '1 seconde 111 millisecondes'
 ```

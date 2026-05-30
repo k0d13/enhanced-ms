@@ -20,12 +20,12 @@ export function formatUnit(
 ) {
   const { useAbbreviations, hideUnitNames, minimumDigits } = options;
 
-  // Skip padStart entirely when minimumDigits is 0 (the default) — avoids a
+  // Skip padStart entirely when minimumDigits is 0 (the default), avoids a
   // string method call on every formatted unit.
   const countStr = String(count);
   const amount = minimumDigits > countStr.length ? countStr.padStart(minimumDigits, '0') : countStr;
-
   if (hideUnitNames) return amount;
+
   const name = pluraliseUnit(unit, count, options);
   // Avoid a ternary + extra concat for the common abbreviation-less path
   return useAbbreviations ? `${amount}${name}` : `${amount} ${name}`;
